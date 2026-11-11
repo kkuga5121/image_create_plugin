@@ -1,0 +1,62 @@
+[
+  {
+    "id": "W2",
+    "title": "One More Spring",
+    "orientation": "iPad landscape",
+    "path": "/Users/jatupon.b/git_test/image_create_plugin/output/imagegen/violet-evergarden-ipad/W2-one-more-spring-ipad.png",
+    "source": "/Users/jatupon.b/.codex/generated_images/01a1c97d-a83f-7623-bdfc-009610aefc02/exec-5b330d2d-14a7-4f36-926d-0642d49a6c97.png",
+    "width": 1510,
+    "height": 1041,
+    "aspect_ratio": 1.4505283381364074,
+    "target_aspect_ratio": 1.45,
+    "tool": "built-in image_gen",
+    "altered": false,
+    "art_direction": "Native child agent ipad_art_direction",
+    "visual_review": {
+      "reviewer": "Native child agent ipad_visual_review",
+      "access": "Inspected actual PNG through view_image",
+      "verdict": "pass",
+      "corrections": "None required"
+    }
+  },
+  {
+    "id": "W3",
+    "title": "Words Above the Clouds",
+    "orientation": "iPad landscape",
+    "path": "/Users/jatupon.b/git_test/image_create_plugin/output/imagegen/violet-evergarden-ipad/W3-words-above-the-clouds-ipad.png",
+    "source": "/Users/jatupon.b/.codex/generated_images/01a1c97d-a83f-7623-bdfc-009610aefc02/exec-dc94c72c-7e6b-4b10-a8b0-cc74f04a85f1.png",
+    "width": 1510,
+    "height": 1041,
+    "aspect_ratio": 1.4505283381364074,
+    "target_aspect_ratio": 1.45,
+    "tool": "built-in image_gen",
+    "altered": false,
+    "art_direction": "Native child agent ipad_art_direction",
+    "visual_review": {
+      "reviewer": "Native child agent ipad_visual_review",
+      "access": "Inspected actual PNG through view_image",
+      "verdict": "pass",
+      "corrections": "None required"
+    }
+  },
+  {
+    "id": "L2",
+    "title": "Station Beyond the Thaw",
+    "orientation": "iPad landscape",
+    "path": "/Users/jatupon.b/git_test/image_create_plugin/output/imagegen/violet-evergarden-ipad/L2-station-beyond-the-thaw-ipad.png",
+    "source": "/Users/jatupon.b/.codex/generated_images/01a1c97d-a83f-7623-bdfc-009610aefc02/exec-b0e64376-8253-4d23-af03-589412ef8c4e.png",
+    "width": 1510,
+    "height": 1041,
+    "aspect_ratio": 1.4505283381364074,
+    "target_aspect_ratio": 1.45,
+    "tool": "built-in image_gen",
+    "altered": false,
+    "art_direction": "Native child agent ipad_art_direction",
+    "visual_review": {
+      "reviewer": "Native child agent ipad_visual_review",
+      "access": "Inspected actual PNG through view_image",
+      "verdict": "pass",
+      "corrections": "None required"
+    }
+  }
+]
