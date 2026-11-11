@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from validate_plugin import parse_skill_frontmatter, validate_plugin
@@ -150,6 +151,56 @@ class ValidationTests(PluginFixture):
                                 str(self.repo / 'absent')], capture_output=True, text=True)
         self.assertEqual(result.returncode, 1)
         self.assertNotIn('Traceback', result.stderr)
+
+
+class ArchiveTests(PluginFixture):
+    def build(self, output=None):
+        from package_plugin import build_archive
+        return build_archive(self.plugin, output or self.repo / 'dist')
+
+    def test_archive_is_self_contained(self):
+        archive = self.build()
+        self.assertEqual(archive.name, 'fantasy-wallpaper-studio-0.1.0.zip')
+        with zipfile.ZipFile(archive) as z:
+            names = z.namelist()
+            self.assertIn(self.plugin.name + '/plugin.json', names)
+            self.assertIn(self.plugin.name + '/skills/fantasy-wallpaper/SKILL.md', names)
+            self.assertIn(self.plugin.name + '/skills/fantasy-wallpaper/references/brief.md', names)
+            self.assertTrue(all(n.startswith(self.plugin.name + '/') and
+                                not Path(n).is_absolute() and '..' not in Path(n).parts
+                                for n in names))
+            isolated = self.repo / 'extracted'
+            z.extractall(isolated)
+        self.assertEqual(validate_plugin(isolated / self.plugin.name), [])
+
+    def test_invalid_package_writes_no_archive(self):
+        (self.plugin / 'plugin.json').write_text('{}')
+        with self.assertRaises(ValueError):
+            self.build()
+        self.assertEqual(list((self.repo / 'dist').glob('*')), [])
+
+    def test_output_inside_plugin_rejected(self):
+        for output in (self.plugin, self.plugin / 'nested'):
+            with self.subTest(output=output):
+                with self.assertRaises(ValueError):
+                    self.build(output)
+        self.assertEqual(list(self.plugin.rglob('*.zip')), [])
+
+    def test_existing_archive_preserved(self):
+        output = self.repo / 'dist'
+        output.mkdir()
+        archive = output / 'fantasy-wallpaper-studio-0.1.0.zip'
+        archive.write_bytes(b'keep existing bytes')
+        with self.assertRaises(ValueError):
+            self.build(output)
+        self.assertEqual(archive.read_bytes(), b'keep existing bytes')
+
+    def test_failed_write_cleans_temporary_file(self):
+        from unittest.mock import patch
+        with patch('zipfile.ZipFile.write', side_effect=OSError('test write failure')):
+            with self.assertRaises(OSError):
+                self.build()
+        self.assertEqual(list((self.repo / 'dist').glob('*')), [])
 
 
 if __name__ == '__main__':
