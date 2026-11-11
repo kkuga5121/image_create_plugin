@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "fantasy-wallpaper-studio",
+  "version": "0.1.0",
+  "description": "Native subagent workflows for painterly fantasy wallpaper ideas and matching vivo/iPad artwork.",
+  "repository": "https://github.com/kkuga5121/image_create_plugin",
+  "keywords": ["wallpaper", "fantasy", "image-generation", "subagents"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Fantasy Wallpaper Studio",
+        "shortDescription": "Create matching fantasy art",
+        "longDescription": "Explore original fantasy concepts and create matching vivo portrait and iPad landscape wallpapers with native subagent art direction and image review. Requires host subagent and image tools.",
+        "category": "Productivity",
+        "capabilities": [],
+        "defaultPrompt": "ทำสถานีปลายรางที่ทะเลมาถึง แบบคู่ vivo + iPad โดยใช้ subagent ช่วยวางภาพและตรวจความสอดคล้อง"
+      }
+    }
+  }
+}
