@@ -152,6 +152,58 @@ class ValidationTests(PluginFixture):
         self.assertEqual(result.returncode, 1)
         self.assertNotIn('Traceback', result.stderr)
 
+    def test_sensitive_content_in_any_extension_blocks_archive(self):
+        from package_plugin import build_archive
+        for name, content in (
+                ('notes', b'https://chatgpt.com/library?file_id=' + b'libfile_example'),
+                ('private.pem', b'-----BEGIN ' + b'PRIVATE KEY-----'),
+                ('binary.dat', b'\xff\x00' + b'libfile_' + b'example')):
+            with self.subTest(name=name):
+                path = self.plugin / name
+                path.write_bytes(content)
+                self.assertTrue(validate_plugin(self.plugin))
+                with self.assertRaises(ValueError):
+                    build_archive(self.plugin, self.repo / 'dist')
+                self.assertEqual(list((self.repo / 'dist').glob('*')), [])
+                path.unlink()
+
+    def test_reference_style_markdown_is_contained(self):
+        for reference in ('../../../../private.md', 'references/missing.md'):
+            with self.subTest(reference=reference):
+                (self.skill / 'SKILL.md').write_text(
+                    self.skill_text + f'\n[Required brief][outside]\n[outside]: {reference}\n')
+                self.assertIn('reference', self.errors().lower())
+        (self.skill / 'SKILL.md').write_text(
+            self.skill_text + '\n[Brief][style]\n[style]: <references/brief.md> "Style"\n')
+        self.assertEqual(validate_plugin(self.plugin), [])
+
+    def test_metadata_icons_use_skill_relative_contained_paths(self):
+        assets = self.skill / 'assets'
+        assets.mkdir()
+        icon = assets / 'icon.svg'
+        icon.write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
+        for key in ('icon_small', 'icon_large'):
+            self.metadata['interface'][key] = './assets/icon.svg'
+        self.write_json(self.meta_path, self.metadata)
+        self.assertEqual(validate_plugin(self.plugin), [])
+        for key in ('icon_small', 'icon_large'):
+            for value in ('../../../../private.svg', './assets/missing.svg', str(icon),
+                          'https://example.com/icon.svg', '', None):
+                with self.subTest(key=key, value=value):
+                    self.metadata['interface'][key] = value
+                    self.write_json(self.meta_path, self.metadata)
+                    self.assertIn('reference', self.errors().lower())
+            self.metadata['interface'][key] = './assets/icon.svg'
+
+    def test_backslash_filenames_rejected_for_portable_zip(self):
+        from package_plugin import build_archive
+        path = self.plugin / ('..' + '\\' + '..' + '\\' + 'outside.txt')
+        path.write_text('unsafe Windows path')
+        self.assertTrue(validate_plugin(self.plugin))
+        with self.assertRaises(ValueError):
+            build_archive(self.plugin, self.repo / 'dist')
+        self.assertEqual(list((self.repo / 'dist').glob('*')), [])
+
 
 class ArchiveTests(PluginFixture):
     def build(self, output=None):

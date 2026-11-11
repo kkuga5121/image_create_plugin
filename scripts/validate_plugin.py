@@ -69,9 +69,9 @@ def parse_skill_frontmatter(text: str) -> dict[str, str]:
     return result
 
 
-def _reference(value, source, root, errors):
-    if not isinstance(value, str):
-        errors.append(f"{source.name}: reference must be a string")
+def _reference(value, source, root, errors, *, base=None, local_only=False):
+    if not _nonblank(value):
+        errors.append(f"{source.name}: reference must be a nonblank string")
         return
     value = value.strip()
     if value.startswith("<") and value.endswith(">"):
@@ -79,14 +79,17 @@ def _reference(value, source, root, errors):
     try:
         url = urlsplit(value)
         if url.scheme or url.netloc:
-            if url.scheme != "https" or not url.netloc or url.username or url.password:
+            if local_only or url.scheme != "https" or not url.netloc or url.username or url.password:
                 errors.append(f"{source.name}: invalid external reference {value}")
+            return
+        if local_only and (url.fragment or url.query):
+            errors.append(f"{source.name}: asset reference must be a file path")
             return
         if not url.path:
             return  # Same-document fragment.
         path = Path(unquote(url.path))
-        target = (source.parent / path).resolve()
-        if path.is_absolute() or not target.is_relative_to(root):
+        target = ((base if base is not None else source.parent) / path).resolve()
+        if path.is_absolute() or "\\" in str(path) or not target.is_relative_to(root):
             errors.append(f"{source.name}: reference escapes plugin: {value}")
         elif not target.is_file():
             errors.append(f"{source.name}: reference missing: {value}")
@@ -94,7 +97,7 @@ def _reference(value, source, root, errors):
         errors.append(f"{source.name}: invalid reference {value}: {exc}")
 
 
-def _metadata(path, errors):
+def _metadata(path, root, errors):
     data = _object(path, errors)
     interface = data.get("interface", {})
     if not isinstance(interface, dict):
@@ -105,6 +108,10 @@ def _metadata(path, errors):
                 errors.append(f"{path.name}: interface.{key} must be nonblank")
         if "default_prompt" in interface and not _nonblank(interface["default_prompt"]):
             errors.append(f"{path.name}: invalid default_prompt")
+        for key in ("icon_small", "icon_large"):
+            if key in interface:
+                _reference(interface[key], path, root, errors,
+                           base=path.parent.parent, local_only=True)
     policy = data.get("policy", {})
     if not isinstance(policy, dict):
         errors.append(f"{path.name}: policy must be an object")
@@ -157,6 +164,8 @@ def validate_plugin(plugin_dir: Path, marketplace: Path | None = None) -> list[s
         paths = sorted(root.rglob("*"))
         for path in paths:
             relative = path.relative_to(root)
+            if any("\\" in part or ":" in part for part in relative.parts):
+                errors.append(f"forbidden nonportable archive path: {relative}")
             if path.is_symlink():
                 errors.append(f"symlink forbidden: {relative}")
             if (FORBIDDEN_DIRS.intersection(relative.parts) or path.name.startswith(".env") or
@@ -166,20 +175,33 @@ def validate_plugin(plugin_dir: Path, marketplace: Path | None = None) -> list[s
         if any("symlink" in error for error in errors):
             return errors  # Never read a symlink target, including its descendants.
         for path in paths:
-            if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
+            if not path.is_file():
                 continue
             try:
-                text = path.read_text(encoding="utf-8")
-            except (OSError, UnicodeError):
+                content = path.read_bytes()
+            except OSError:
+                errors.append(f"{path.relative_to(root)}: unreadable file")
+                continue
+            # Every regular file enters the archive, so extension cannot gate checks.
+            if re.search(rb"chatgpt\.com/library|libfile_", content, re.I):
+                errors.append(f"{path.relative_to(root)}: private library reference")
+            if re.search(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{20,}", content):
+                errors.append(f"{path.relative_to(root)}: credential material forbidden")
+            if path.suffix.lower() not in TEXT_SUFFIXES:
+                continue
+            try:
+                text = content.decode("utf-8")
+            except UnicodeError:
                 errors.append(f"{path.relative_to(root)}: unreadable UTF-8 text")
                 continue
-            if re.search(r"chatgpt\.com/library|libfile_", text, re.I):
-                errors.append(f"{path.relative_to(root)}: private library reference")
-            if re.search(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{20,}", text):
-                errors.append(f"{path.relative_to(root)}: credential material forbidden")
             if path.suffix.lower() == ".md":
                 for link in re.findall(r"\]\(([^)\n]+)\)", text):
                     _reference(link, path, root, errors)
+                # Reference definitions serve full, collapsed, and shortcut links.
+                definitions = re.findall(
+                    r"(?m)^ {0,3}\[[^\]\n]+\]:[ \t]*(?:\n[ \t]+)?(?:<([^>\n]+)>|(\S+))", text)
+                for angle, bare in definitions:
+                    _reference(angle or bare, path, root, errors)
         manifest_path = root / "plugin.json"
         data = _object(manifest_path, errors)
         name = data.get("name")
@@ -230,7 +252,7 @@ def validate_plugin(plugin_dir: Path, marketplace: Path | None = None) -> list[s
                 errors.append(f"{skill.relative_to(root)}: {exc}")
             meta = skill.parent / "agents" / "openai.yaml"
             if meta.exists():
-                _metadata(meta, errors)
+                _metadata(meta, root, errors)
         if marketplace is not None:
             _marketplace(marketplace, root, name, errors)
     except (OSError, ValueError) as exc:
