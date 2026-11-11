@@ -1,0 +1,22 @@
+@startuml
+title Fantasy Wallpaper Studio: native delegation and pair generation
+start
+:Resolve request, concept set, and available host tools;
+if (Required tools available?) then (yes)
+  if (New ideas requested?) then (yes)
+    :Delegate bounded idea categories to native subagents;
+    :Collect and present ideas;
+    :Resolve selected concept;
+  endif
+  :Delegate continuity brief and compositions to art director;
+  :Main agent generates and inspects vivo portrait;
+  :Main agent supplies actual portrait as image reference;
+  :Main agent generates separate iPad landscape;
+  :Delegate visual review when images are accessible;
+  :Main agent resolves defects and verifies outputs;
+  :Deliver two labeled images and verification status;
+else (no)
+  :Report blocked capability and available alternatives;
+endif
+stop
+@enduml
