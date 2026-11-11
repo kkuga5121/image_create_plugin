@@ -2,7 +2,9 @@
 
 Date: 11 November 2026, Asia/Bangkok.
 
-Status: Proposed design; awaiting approval before implementation.
+Status: Implementation authorized by the user's “implement plan” request.
+Source package and tooling implemented; verification and delivery status are
+recorded in the [verification record](../test/2026-11-11-test-fantasy-wallpaper-plugin.md).
 
 ## Purpose and source
 
