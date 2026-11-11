@@ -70,7 +70,11 @@ It does not prove installed-plugin invocation or image generation.
 - Packaged-role native delegation: Passed for art direction as described above.
 - Target-client installation/activation: Not run.
 - Actual image creation/editing, dimension measurement, and device testing: Not run.
-- Remote source delivery: Pending.
+- Remote source delivery: Verified on `origin/main` at
+  [5a872fa5583c33d5d8c0339aae88343097a8e5a0](https://github.com/kkuga5121/image_create_plugin/commit/5a872fa5583c33d5d8c0339aae88343097a8e5a0).
+  `git rev-parse HEAD` and `git ls-remote --heads origin main` returned the same
+  full hash after the push. This follow-up record is committed separately; the
+  final chat reports verification of its delivery as well.
 
 Commands used:
 

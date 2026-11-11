@@ -12,7 +12,7 @@
 
 **Source:** [Wallpaper session summary](../wallpaper-project-summary.md).
 
-**Status:** Implementation authorized by the user's “implement plan” request. Execution evidence is recorded in the [verification record](../test/2026-11-11-test-fantasy-wallpaper-plugin.md); client installation and real image generation remain untested.
+**Status:** Implemented and source delivery verified on `origin/main`. Execution evidence is recorded in the [verification record](../test/2026-11-11-test-fantasy-wallpaper-plugin.md); client installation and real image generation remain untested.
 
 ## Global Constraints
 
@@ -136,8 +136,8 @@ No unit tests are needed for this reversible metadata/documentation work. Commit
 - [x] **Step 3:** Walk through S1–S7 as manual scenarios only where the available environment supports observation. Do not generate wallpapers solely for packaging validation. Mark image-dependent scenarios and client installation `Not run` unless actually exercised; distinguish reasoning-through instructions from observed execution. Report blockers without fabricated success.
 - [x] **Step 4:** Request a focused whole-change review against the design, then resolve correctness findings. Review catalog numbering, stale visual rules, child image access, reference dependency, archive containment, and honest capability reporting. Run only the checks affected by any corrections, and rebuild the archive after package edits.
 - [x] **Step 5:** Commit final verification/documentation with message `docs: record wallpaper plugin verification and usage`. Check `git status --short --branch` and inspect the final commit list. Stage only intended project files; preserve unrelated user work.
-- [ ] **Step 6:** Run `git fetch origin` and `git log --oneline --left-right HEAD...origin/main`. If the remote has new commits, integrate without overwriting them and rerun affected checks. Push with `git push origin main`; never use a force option.
-- [ ] **Step 7:** Compare `git rev-parse HEAD` with the hash returned by `git ls-remote --heads origin main`. Matching hashes prove remote delivery. Report repository/commit link, source paths, local ZIP path, checks performed, and remaining unverified host/image behavior. Do not claim account installation or public publication.
+- [x] **Step 6:** Run `git fetch origin` and `git log --oneline --left-right HEAD...origin/main`. If the remote has new commits, integrate without overwriting them and rerun affected checks. Push with `git push origin main`; never use a force option.
+- [x] **Step 7:** Compare `git rev-parse HEAD` with the hash returned by `git ls-remote --heads origin main`. Matching hashes prove remote delivery. Report repository/commit link, source paths, local ZIP path, checks performed, and remaining unverified host/image behavior. Do not claim account installation or public publication.
 
 ## Completion Boundary
 
