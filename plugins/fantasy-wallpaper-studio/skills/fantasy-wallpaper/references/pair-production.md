@@ -1,5 +1,11 @@
 # Reference-Based Wallpaper Production
 
+This guide governs `WALLPAPER` and the wallpaper branch of `BOTH`. Its device
+ratios, reference dependency, generation order, and failure accounting remain
+unchanged. For Stock-only production use [Stock production](stock-production.md).
+`BOTH` adds a separately composed Stock artwork after the requested wallpaper
+editions; it never turns the wallpaper landscape into a Stock export by resizing.
+
 ## Before generation
 
 Resolve concept/set, orientations, and the latest [visual brief](visual-brief.md).

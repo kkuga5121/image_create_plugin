@@ -1,7 +1,7 @@
 {
   "interface": {
     "display_name": "Fantasy Wallpaper Studio",
-    "short_description": "Create matching fantasy art",
+    "short_description": "Fantasy wallpapers and Stock",
     "default_prompt": "Use $fantasy-wallpaper to create matching vivo and iPad fantasy artwork with native subagent art direction."
   },
   "policy": {

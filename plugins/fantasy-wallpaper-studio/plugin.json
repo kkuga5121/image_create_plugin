@@ -1,16 +1,16 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "fantasy-wallpaper-studio",
-  "version": "0.1.0",
-  "description": "Native subagent workflows for painterly fantasy wallpaper ideas and matching vivo/iPad artwork.",
+  "version": "0.2.0",
+  "description": "Native subagent workflows for painterly fantasy wallpapers and commercially oriented Adobe Stock artwork with evidence-based review.",
   "repository": "https://github.com/kkuga5121/image_create_plugin",
-  "keywords": ["wallpaper", "fantasy", "image-generation", "subagents"],
+  "keywords": ["wallpaper", "fantasy", "image-generation", "subagents", "adobe-stock", "stock-illustrations"],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Fantasy Wallpaper Studio",
         "shortDescription": "Create matching fantasy art",
-        "longDescription": "Explore original fantasy concepts and create matching vivo portrait and iPad landscape wallpapers with native subagent art direction and image review. Requires host subagent and image tools.",
+        "longDescription": "Create matching vivo/iPad fantasy wallpapers, original Adobe Stock illustrations, or separately composed editions of both. Native subagents provide concepts, art direction, actual-image review, and Stock compliance and English metadata. Stock readiness requires measured files and verified rights. Requires host subagent and image tools.",
         "category": "Productivity",
         "capabilities": [],
         "defaultPrompt": "ทำสถานีปลายรางที่ทะเลมาถึง แบบคู่ vivo + iPad โดยใช้ subagent ช่วยวางภาพและตรวจความสอดคล้อง"

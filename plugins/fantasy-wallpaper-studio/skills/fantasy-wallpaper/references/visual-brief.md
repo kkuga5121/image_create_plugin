@@ -1,6 +1,6 @@
 # Current Visual Brief
 
-Use these defaults unless the current user explicitly changes them. They derive
+Use these Wallpaper Mode defaults unless the current user explicitly changes them. They derive
 from the latest brief in the 11 November 2026 wallpaper session summary.
 
 - Painterly semi-realistic Fantasy Concept Art across both subject and scene.
@@ -41,3 +41,23 @@ Do not claim that a newly invented scene is an event from the original work.
 Use research tools for requested factual verification; distinguish facts from
 creative adaptations. No historical image files or private library links are
 included in this plugin.
+
+## Stock-specific scope
+
+`ADOBE_STOCK` retains painterly semi-realistic Fantasy Concept Art, natural
+construction, material detail, atmospheric layers, and full-frame storytelling.
+It uses [Stock art direction](stock-production.md) for buyer-oriented aspect
+ratios and useful copy space. The wallpaper default of adult women does not
+restrict original adult Stock characters; honor the selected commercial concept.
+
+Wallpaper inspiration catalogs are not cleared Stock prompts or references.
+Stock prompts, titles, and keywords must not contain artist names, known people,
+franchise titles, copyrighted characters, protected works, government agencies,
+or other third-party IP. Use original concepts without recognizable imitation.
+For a protected anime-character stock request, do not reproduce that character;
+offer an original adult character and distinct setting instead. Assess actual
+output and reference rights using [Stock compliance](stock-compliance.md).
+
+`BOTH` shares an original creative identity across all editions. When an existing
+wallpaper concept contains protected IP, propose an original replacement before
+producing the Stock branch; do not carry that identity into Stock artwork.
